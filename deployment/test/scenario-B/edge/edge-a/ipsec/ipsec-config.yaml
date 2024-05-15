@@ -1,0 +1,28 @@
+apiVersion: batch.sdewan.akraino.org/v1alpha1
+kind: IpsecHost
+metadata:
+  labels:
+    emco/deployment-id: 3720661577566571836-device1-app
+    sdewanPurpose: base
+    targetCluster: Device.device1
+  name: device1hub1
+  namespace: default
+spec:
+  authentication_method: psk
+  connections:
+  - conn_type: tunnel
+    crypto_proposal:
+    - proposal1
+    local_sourceip: '%config'
+    local_updown: /etc/updown_oip
+    mode: start
+    name: Connhub1_10107040
+    remote_subnet: 0.0.0.0/0
+  crypto_proposal:
+  - proposal1
+  force_crypto_proposal: "1"
+  local_identifier: CN=device-device1-cert
+  pre_shared_key: "1234"
+  remote: 10.10.70.40
+  remote_identifier: CN=hub-hub1-cert
+  type: policy-based

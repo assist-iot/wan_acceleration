@@ -1,0 +1,848 @@
+{
+	"info": {
+		"_postman_id": "81931927-c00c-4481-a5a2-18572a167385",
+		"name": "WAN Acceleration",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19707096"
+	},
+	"item": [
+		{
+			"name": "Common endpoints",
+			"item": [
+				{
+					"name": "version",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{ip}}:{{port}}/api/v1/version",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"v1",
+								"version"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{ip}}:{{port}}/api/v1/health",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"v1",
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api-export",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{ip}}:{{port}}/api/v1/api-export",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"v1",
+								"api-export"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Firewall",
+			"item": [
+				{
+					"name": "Zones",
+					"item": [
+						{
+							"name": "Zone Registration",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"metadata\": {\r\n        \"name\": \"ovn-network\"\r\n    },\r\n    \"spec\": {\r\n        \"network\": [\r\n            \"ovn-network\"\r\n        ],\r\n        \"input\": \"ACCEPT\",\r\n        \"output\": \"ACCEPT\",\r\n        \"forward\": \"ACCEPT\",\r\n        \"masq\": \"0\",\r\n        \"mtu_fix\": \"1\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/firewall/zones",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"firewall",
+										"zones"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all firewall zones",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/firewall/zones",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"firewall",
+										"zones"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get firewall zone by name",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/firewall/zones/ovn-network",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"firewall",
+										"zones",
+										"ovn-network"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete firewall zone",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/firewall/zones/ovn-network",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"firewall",
+										"zones",
+										"ovn-network"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "SNATs",
+					"item": [
+						{
+							"name": "SNAT Registration",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"metadata\": {\r\n        \"name\": \"firewallsnat\"\r\n    },\r\n    \"spec\": {\r\n        \"src\": \"ovn-network\",\r\n        \"src_dip\": \"160.52.40.1\",\r\n        \"dest\": \"pnetwork\",\r\n        \"dest_ip\": \"160.52.40.0/24\",\r\n        \"proto\": \"tcp\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/firewall/snats",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"firewall",
+										"snats"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all firewall SNATs",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/firewall/snats",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"firewall",
+										"snats"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get firewall SNAT by name",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/firewall/snats/firewallsnat",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"firewall",
+										"snats",
+										"firewallsnat"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete firewall SNAT",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/firewall/snats/firewallsnat",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"firewall",
+										"snats",
+										"firewallsnat"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "DNATs",
+					"item": [
+						{
+							"name": "DNAT Registration",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"metadata\": {\r\n        \"name\": \"firewalldnat\"\r\n    },\r\n    \"spec\": {\r\n        \"src\": \"pnetwork\",\r\n        \"src_ip\": \"160.52.40.0/24\",\r\n        \"src_dip\": \"160.52.40.1\",\r\n        \"src_dport\": \"80\",\r\n        \"dest\": \"ovn-network\",\r\n        \"dest_ip\": \"172.16.70.51\",\r\n        \"dest_port\": \"80\",\r\n        \"proto\": \"tcp\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/firewall/dnats",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"firewall",
+										"dnats"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all firewall DNATs",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/firewall/dnats",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"firewall",
+										"dnats"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get firewall DNAT by name",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/firewall/dnats/firewalldnat",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"firewall",
+										"dnats",
+										"firewalldnat"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete firewall DNAT",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/firewall/dnats/firewalldnat",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"firewall",
+										"dnats",
+										"firewalldnat"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Forwardings",
+					"item": [
+						{
+							"name": "Forwarding Registration",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"metadata\": {\r\n        \"name\": \"firewallforwarding\"\r\n    },\r\n    \"spec\": {\r\n        \"src\": \"ovn-network\",\r\n        \"dest\": \"pnetwork\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/firewall/forwardings",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"firewall",
+										"forwardings"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all firewall forwardings",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/firewall/forwardings",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"firewall",
+										"forwardings"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get firewall forwarding by name",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/firewall/forwardings/firewallforwarding",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"firewall",
+										"forwardings",
+										"firewallforwarding"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete firewall forwarding",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/firewall/forwardings/firewallforwarding",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"firewall",
+										"forwardings",
+										"firewallforwarding"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Rules",
+					"item": [
+						{
+							"name": "Rule Registration",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"metadata\": {\r\n        \"name\": \"firewallrule\"\r\n    },\r\n    \"spec\": {\r\n        \"src\": \"ovn-network\",\r\n        \"src_dip\": \"160.52.40.3\",\r\n        \"src_port\": \"80\",\r\n        \"proto\": \"tcp\",\r\n        \"target\": \"REJECT\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/firewall/rules",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"firewall",
+										"rules"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all firewall rules",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/firewall/rules",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"firewall",
+										"rules"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get firewall rule by name",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/firewall/rules/firewallrule",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"firewall",
+										"rules",
+										"firewallrule"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete firewall rule",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/firewall/rules/firewallrule",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"firewall",
+										"rules",
+										"firewallrule"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "MWAN3",
+			"item": [
+				{
+					"name": "Policies",
+					"item": [
+						{
+							"name": "Policy Registration",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"metadata\": {\r\n        \"name\": \"mwan3policy\"\r\n    },\r\n    \"spec\": {\r\n        \"members\": [\r\n            {\r\n                \"metric\": 2,\r\n                \"network\": \"ovn-network\",\r\n                \"weight\": 2\r\n            },\r\n            {\r\n                \"metric\": 2,\r\n                \"network\": \"pnetwork\",\r\n                \"weight\": 2\r\n            }\r\n        ]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/mwan3/policies",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"mwan3",
+										"policies"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all mwan3 policies",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/mwan3/policies",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"mwan3",
+										"policies"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get mwan3 policy by name",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/mwan3/policies/mwan3policy",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"mwan3",
+										"policies",
+										"mwan3policy"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete mwan3 policy",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/mwan3/policies/mwan3policy",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"mwan3",
+										"policies",
+										"mwan3policy"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Rules",
+					"item": [
+						{
+							"name": "Rule Registration",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"metadata\": {\r\n        \"name\": \"mwan3rule\"\r\n    },\r\n    \"spec\": {\r\n        \"family\": \"mwan3\",\r\n        \"policy\": \"mwan3policy\",\r\n        \"src_ip\": \"160.52.40.3\",\r\n        \"src_port\": \"80\",\r\n        \"dest_ip\": \"0.0.0.0/0\",\r\n        \"dest_port\": \"80\",\r\n        \"proto\": \"tpc\",\r\n        \"sticky\": \"sticky\",\r\n        \"timeout\": \"15\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/mwan3/rules",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"mwan3",
+										"rules"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all mwan3 rules",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/mwan3/rules",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"mwan3",
+										"rules"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get mwan3 rule by name",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/mwan3/rules/mwan3rule",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"mwan3",
+										"rules",
+										"mwan3rule"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete mwan3 rule",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://{{ip}}:{{port}}/api/v1/mwan3/rules/mwan3rule",
+									"protocol": "http",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"v1",
+										"mwan3",
+										"rules",
+										"mwan3rule"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "ip",
+			"value": "158.42.161.177",
+			"type": "string"
+		},
+		{
+			"key": "port",
+			"value": "31297",
+			"type": "string"
+		}
+	]
+}

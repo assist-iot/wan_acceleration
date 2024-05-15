@@ -1,0 +1,12 @@
+apiVersion: batch.sdewan.akraino.org/v1alpha1
+kind: IpsecProposal
+metadata:
+  labels:
+    sdewanPurpose: base
+    targetCluster: Device.device1
+  name: proposal1
+spec:
+  dh_group: modp4096
+  encryption_algorithm: aes256
+  hash_algorithm: sha256
+  name: proposal1

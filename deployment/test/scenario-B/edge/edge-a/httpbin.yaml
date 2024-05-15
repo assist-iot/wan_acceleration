@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-http-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: simple-http-service
+  template:
+    metadata:
+      labels:
+        name: simple-http-service
+        app: MyApp
+      annotations:
+        k8s.plugin.opnfv.org/nfn-network: '{ "type": "ovn4nfv", "interface": [{"name": "ovn-network", "interface": "net0", "ipAddress": "172.16.70.51"}]}'
+        k8s.v1.cni.cncf.io/networks: '[{ "name": "ovn4nfv-k8s-plugin"}]'
+    spec:
+      containers:
+        - name: simple-http-service
+          image: integratedcloudnative/httpbin:test
+          ports:
+            - containerPort: 80
+          imagePullPolicy: IfNotPresent
+          securityContext:
+                  privileged: true

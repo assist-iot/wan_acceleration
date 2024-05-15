@@ -1,0 +1,30 @@
+---
+apiVersion: k8s.plugin.opnfv.org/v1alpha1
+kind: ProviderNetwork
+metadata:
+  name: pnetwork
+spec:
+  cniType: ovn4nfv
+  ipv4Subnets:
+  - subnet: 10.10.70.0/24
+    name: subnet
+    gateway: 10.10.70.1/24
+    excludeIps: 10.10.70.2 10.10.70.5..10.10.70.10
+  providerNetType: VLAN
+  vlan:
+    vlanId: "100"
+    providerInterfaceName: ens18
+    logicalInterfaceName: ens18.100
+    vlanNodeSelector: all
+---
+apiVersion: k8s.plugin.opnfv.org/v1alpha1
+kind: Network
+metadata:
+  name: ovn-network
+spec:
+  # Add fields here
+  cniType: ovn4nfv
+  ipv4Subnets:
+  - subnet: 172.16.70.0/24
+    name: subnet1
+    gateway: 172.16.70.1/24

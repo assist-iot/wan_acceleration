@@ -1,0 +1,59 @@
+apiVersion: batch.sdewan.akraino.org/v1alpha1
+kind: IpsecSite
+metadata:
+  labels:
+    emco/deployment-id: 3720661577566571837-hub1-app
+    sdewanPurpose: base
+    targetCluster: Hub.hub1
+  name: hub1device1
+  namespace: default
+spec:
+  authentication_method: psk
+  connections:
+  - conn_type: tunnel
+    crypto_proposal:
+    - proposal1
+    local_subnet: 0.0.0.0/0
+    local_updown: /etc/updown
+    mark: "30"
+    mode: start
+    name: Conndevice1_16052400
+    remote_sourceip: 160.52.40.1
+  crypto_proposal:
+  - proposal1
+  force_crypto_proposal: "0"
+  local_identifier: CN=hub-hub1-cert
+  pre_shared_key: "1234"
+  remote: '%any'
+  remote_identifier: CN=device-device1-cert
+  type: VTI-based
+---
+apiVersion: batch.sdewan.akraino.org/v1alpha1
+kind: IpsecSite
+metadata:
+  labels:
+    emco/deployment-id: 3720661577566571838-hub1-app
+    sdewanPurpose: base
+    targetCluster: Hub.hub1
+  name: hub1device2
+  namespace: default
+spec:
+  authentication_method: psk
+  connections:
+  - conn_type: tunnel
+    crypto_proposal:
+    - proposal1
+    local_subnet: 0.0.0.0/0
+    local_updown: /etc/updown
+    mark: "30"
+    mode: start
+    name: Conndevice2_16052402
+    remote_sourceip: 160.52.40.2
+  crypto_proposal:
+  - proposal1
+  force_crypto_proposal: "0"
+  local_identifier: CN=hub-hub1-cert
+  pre_shared_key: "1234"
+  remote: '%any'
+  remote_identifier: CN=device-device2-cert
+  type: VTI-based

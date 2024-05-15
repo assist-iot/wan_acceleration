@@ -1,0 +1,14 @@
+apiVersion: batch.sdewan.akraino.org/v1alpha1
+kind: FirewallSNAT
+metadata:
+  name: firewallsnat
+  namespace: default
+  labels:
+    sdewanPurpose: base
+    targetCluster: Device.device1
+spec:
+  src: ovn-network
+  src_dip: 10.10.70.41
+  dest: pnetwork
+  dest_ip: 10.10.70.0/24
+  proto: tcp

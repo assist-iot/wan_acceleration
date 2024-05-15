@@ -1,0 +1,1716 @@
+openapi: 3.0.2
+info:
+  version: '2.0.0'
+
+  title: WAN-Acceleration OpenAPI
+
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  x-logo:
+    url: 'https://redocly.github.io/openapi-template/logo.png'
+
+paths:
+  ############################ Firewall #################################################
+  /api/v1/firewall/zones:
+    post:
+      tags:
+        - Firewall Zone Registration
+      summary: Firewall zone registration
+      description: Add a new `Firewall Zone`
+      operationId: addFirewallZone
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items: 
+                $ref: '#/components/schemas/FirewallZone'
+            examples:
+              ovn-network:
+                value:
+                  metadata:
+                    name: ovn-network
+                  spec:
+                    network:
+                      - ovn-network
+                    input: ACCEPT
+                    output: ACCEPT
+                    forward: ACCEPT
+                    masq: "0"
+                    mtu_fix: "1"
+              pnetwork:
+                value:
+                  metadata:
+                    name: pnetwork
+                  spec:
+                    network:
+                      - pnetwork
+                    input: ACCEPT
+                    output: ACCEPT
+                    forward: ACCEPT
+                    masq: "0"
+                    mtu_fix: "1"
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/FirewallZone'
+              examples:
+                ovn-network:
+                  value:
+                    metadata:
+                      name: ovn-network
+                    spec:
+                      network:
+                        - ovn-network
+                      input: ACCEPT
+                      output: ACCEPT
+                      forward: ACCEPT
+                      masq: "0"
+                      mtu_fix: "1"
+                pnetwork:
+                  value:
+                    metadata:
+                      name: pnetwork
+                    spec:
+                      network:
+                        - pnetwork
+                      input: ACCEPT
+                      output: ACCEPT
+                      forward: ACCEPT
+                      masq: "0"
+                      mtu_fix: "1"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                message: Error creating object
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              example:
+                message: Content-Type not supported!
+        '409':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: Object already exists
+        '500':
+          description: Internal error
+          content: {}
+    get:
+      tags:
+        - Firewall Zone Registration
+      summary: Get all firewall zones
+      description: Return all `Firewall Zones`
+      operationId: getFirewallZones
+      responses: # list of responses
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FirewallZoneArray'
+              example:
+              - metadata:
+                  name: ovn-network
+                spec:
+                  network:
+                    - ovn-network
+                  input: ACCEPT
+                  output: ACCEPT
+                  forward: ACCEPT
+                  masq: "0"
+                  mtu_fix: "1"
+              - metadata:
+                  name: pnetwork
+                spec:
+                  network:
+                    - pnetwork
+                  input: ACCEPT
+                  output: ACCEPT
+                  forward: ACCEPT
+                  masq: "0"
+                  mtu_fix: "1"
+
+        '404':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: No firewall zones found
+        '500':
+          description: Internal error
+          content: {}
+  /api/v1/firewall/zones/{zone-name}:
+    parameters:
+    - $ref: '#/components/parameters/zone-name'
+    get:
+      tags:
+        - Firewall Zone Registration
+      summary: Get firewall zone by name
+      description: |
+        Return a `Firewall Zone` by name
+      operationId: getFirewallZoneByName
+      responses: # list of responses
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FirewallZone'
+              example:
+                metadata:
+                  name: ovn-network
+                spec:
+                  network:
+                    - ovn-network
+                  input: ACCEPT
+                  output: ACCEPT
+                  forward: ACCEPT
+                  masq: "0"
+                  mtu_fix: "1"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: firewall zone not found for the given name
+        '500':
+          description: Internal error
+          content: {}
+    delete:
+      tags:
+        - Firewall Zone Registration
+      summary: Delete firewall zone by name
+      description: |
+        Delete `Firewall Zone` by name
+      operationId: deleteFirewallZoneByName
+      responses: # list of responses
+        '200':
+          description: Success
+          content:
+            application/json:
+              example:
+                message: Object deleted successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                message: Error deleting object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: Object not found
+        '500':
+          description: Internal error
+          content: {}
+          
+  /api/v1/firewall/snats:
+    post:
+      tags:
+        - Firewall SNAT Registration
+      summary: Firewall SNAT registration
+      description: Add a new `Firewall SNAT`
+      operationId: addFirewallSnat
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FirewallSNAT'
+            example:
+              metadata:
+                name: firewallsnat
+              spec:
+                src: ovn-network
+                src_dip: "160.52.40.1"
+                dest: pnetwork
+                dest_ip: "160.52.40.0/24"
+                proto: tcp
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FirewallSNAT'
+              example:
+                metadata:
+                  name: firewallsnat
+                spec:
+                  src: ovn-network
+                  src_dip: "160.52.40.1"
+                  dest: pnetwork
+                  dest_ip: "160.52.40.0/24"
+                  proto: tcp
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                message: Error creating object
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              example:
+                message: Content-Type not supported!
+        '409':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: Object already exists
+        '500':
+          description: Internal error
+          content: {}
+    get:
+      tags:
+        - Firewall SNAT Registration
+      summary: Get all firewall SNATs
+      description: Return all `Firewall SNATs`
+      operationId: getFirewallSnats
+      responses: # list of responses
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FirewallSNATArray'
+              example:
+              - metadata:
+                  name: firewallsnat
+                spec:
+                  src: ovn-network
+                  src_dip: "160.52.40.1"
+                  dest: pnetwork
+                  dest_ip: "160.52.40.0/24"
+                  proto: tcp
+
+        '404':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: No firewall snats found
+        '500':
+          description: Internal error
+          content: {}
+  /api/v1/firewall/snats/{snat-name}:
+    parameters:
+    - $ref: '#/components/parameters/snat-name'
+    get:
+      tags:
+        - Firewall SNAT Registration
+      summary: Get firewall SNAT by name
+      description: |
+        Return a `Firewall SNAT` by name
+      operationId: getFirewallSNATByName
+      responses: # list of responses
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FirewallSNAT'
+              example:
+                metadata:
+                  name: firewallsnat
+                spec:
+                  src: ovn-network
+                  src_dip: "160.52.40.1"
+                  dest: pnetwork
+                  dest_ip: "160.52.40.0/24"
+                  proto: tcp
+        '404':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: firewall snat not found for the given name
+        '500':
+          description: Internal error
+          content: {}
+    delete:
+      tags:
+        - Firewall SNAT Registration
+      summary: Delete firewall SNAT by name
+      description: |
+        Delete `Firewall SNAT` by name
+      operationId: deleteFirewallSNATByName
+      responses: # list of responses
+        '200':
+          description: Success
+          content:
+            application/json:
+              example:
+                message: Object deleted successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                message: Error deleting object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: Object not found
+        '500':
+          description: Internal error
+          content: {}
+
+  /api/v1/firewall/dnats:
+    post:
+      tags:
+        - Firewall DNAT Registration
+      summary: Firewall DNAT registration
+      description: Add a new `Firewall DNAT`
+      operationId: addFirewallDnat
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FirewallDNAT'
+            example:
+              metadata:
+                name: firewalldnat
+              spec:
+                src: pnetwork
+                src_ip: "160.52.40.0/24"
+                src_dip: "160.52.40.1"
+                src_dport: "80"
+                dest: ovn-network
+                dest_ip: "172.16.70.51"
+                dest_port: "80"
+                proto: tcp
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FirewallDNAT'
+              example:
+                metadata:
+                  name: firewalldnat
+                spec:
+                  src: pnetwork
+                  src_ip: "160.52.40.0/24"
+                  src_dip: "160.52.40.1"
+                  src_dport: "80"
+                  dest: ovn-network
+                  dest_ip: "172.16.70.51"
+                  dest_port: "80"
+                  proto: tcp
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                message: Error creating object
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              example:
+                message: Content-Type not supported!
+        '409':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: Object already exists
+        '500':
+          description: Internal error
+          content: {}
+    get:
+      tags:
+        - Firewall DNAT Registration
+      summary: Get all firewall DNATs
+      description: Return all `Firewall DNATs`
+      operationId: getFirewallDnats
+      responses: # list of responses
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FirewallDNATArray'
+              example:
+              - metadata:
+                  name: firewalldnat
+                spec:
+                  src: pnetwork
+                  src_ip: "160.52.40.0/24"
+                  src_dip: "160.52.40.1"
+                  src_dport: "80"
+                  dest: ovn-network
+                  dest_ip: "172.16.70.51"
+                  dest_port: "80"
+                  proto: tcp
+        '404':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: No firewall dnats found
+        '500':
+          description: Internal error
+          content: {}
+  /api/v1/firewall/dnats/{dnat-name}:
+    parameters:
+    - $ref: '#/components/parameters/dnat-name'
+    get:
+      tags:
+        - Firewall DNAT Registration
+      summary: Get firewall DNAT by name
+      description: |
+        Return a `Firewall DNAT` by name
+      operationId: getFirewallDNATByName
+      responses: # list of responses
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FirewallDNAT'
+              example:
+                metadata:
+                  name: firewalldnat
+                spec:
+                  src: pnetwork
+                  src_ip: "160.52.40.0/24"
+                  src_dip: "160.52.40.1"
+                  src_dport: "80"
+                  dest: ovn-network
+                  dest_ip: "172.16.70.51"
+                  dest_port: "80"
+                  proto: tcp
+        '404':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: firewall dnat not found for the given name
+        '500':
+          description: Internal error
+          content: {}
+    delete:
+      tags:
+        - Firewall DNAT Registration
+      summary: Delete firewall DNAT by name
+      description: |
+        Delete `Firewall DNAT` by name
+      operationId: deleteFirewallDNATByName
+      responses: # list of responses
+        '200':
+          description: Success
+          content:
+            application/json:
+              example:
+                message: Object deleted successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                message: Error deleting object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: Object not found
+        '500':
+          description: Internal error
+          content: {}
+
+  /api/v1/firewall/forwardings:
+    post:
+      tags:
+        - Firewall Forwarding Registration
+      summary: Firewall forwarding registration
+      description: Add a new `Firewall Forwarding`
+      operationId: addFirewallForwarding
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FirewallForwarding'
+            example:
+              metadata:
+                name: firewallforwarding
+              spec:
+                src: ovn-network
+                dest: pnetwork
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FirewallForwarding'
+              example:
+                metadata:
+                  name: firewallforwarding
+                spec:
+                  src: ovn-network
+                  dest: pnetwork
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                message: Error creating object
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              example:
+                message: Content-Type not supported!
+        '409':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: Object already exists
+        '500':
+          description: Internal error
+          content: {}
+    get:
+      tags:
+        - Firewall Forwarding Registration
+      summary: Get all firewall forwardings
+      description: Return all `Firewall Forwardings`
+      operationId: getFirewallForwarding
+      responses: # list of responses
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FirewallForwardingArray'
+              example:
+              - metadata:
+                  name: firewallforwarding
+                spec:
+                  src: ovn-network
+                  dest: pnetwork
+        '404':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: No firewall forwardings found
+        '500':
+          description: Internal error
+          content: {}
+  /api/v1/firewall/forwardings/{forwarding-name}:
+    parameters:
+    - $ref: '#/components/parameters/forwarding-name'
+    get:
+      tags:
+        - Firewall Forwarding Registration
+      summary: Get firewall forwarding by name
+      description: |
+        Return a `Firewall Forwardings` by name
+      operationId: getFirewallForwardingByName
+      responses: # list of responses
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FirewallForwarding'
+              example:
+                metadata:
+                  name: firewallforwarding
+                spec:
+                  src: ovn-network
+                  dest: pnetwork
+        '404':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: firewall forwarding not found for the given name
+        '500':
+          description: Internal error
+          content: {}
+    delete:
+      tags:
+        - Firewall Forwarding Registration
+      summary: Delete firewall forwarding by name
+      description: |
+        Delete `Firewall Forwarding` by name
+      operationId: deleteFirewallForwardingByName
+      responses: # list of responses
+        '200':
+          description: Success
+          content:
+            application/json:
+              example:
+                message: Object deleted successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                message: Error deleting object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: Object not found
+        '500':
+          description: Internal error
+          content: {}
+  
+  /api/v1/firewall/rules:
+    post:
+      tags:
+        - Firewall Rule Registration
+      summary: Firewall rule registration
+      description: Add a new `Firewall Rules`
+      operationId: addFirewallRule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FirewallRule'
+            example:
+              metadata:
+                name: firewallrule
+              spec:
+                src: ovn-network
+                src_dip: "160.52.40.3"
+                src_port: "80"
+                proto: tcp
+                target: REJECT
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FirewallRule'
+              example:
+                metadata:
+                  name: firewallrule
+                spec:
+                  src: ovn-network
+                  src_dip: "160.52.40.3"
+                  src_port: "80"
+                  proto: tcp
+                  target: REJECT
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                message: Error creating object
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              example:
+                message: Content-Type not supported!
+        '409':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: Object already exists
+        '500':
+          description: Internal error
+          content: {}
+    get:
+      tags:
+        - Firewall Rule Registration
+      summary: Get all firewall rules
+      description: Return all `Firewall Rules`
+      operationId: getFirewallRules
+      responses: # list of responses
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FirewallRuleArray'
+              example:
+              - metadata:
+                  name: firewallrule
+                spec:
+                  src: ovn-network
+                  src_dip: "160.52.40.3"
+                  src_port: "80"
+                  proto: tcp
+                  target: REJECT
+        '404':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: No firewall rules found
+        '500':
+          description: Internal error
+          content: {}
+  /api/v1/firewall/rules/{rule-name}:
+    parameters:
+    - $ref: '#/components/parameters/rule-name'
+    get:
+      tags:
+        - Firewall Rule Registration
+      summary: Get firewall rule by name
+      description: |
+        Return a `Firewall Rule` by name
+      operationId: getFirewallRuleByName
+      responses: # list of responses
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FirewallRule'
+              example:
+                metadata:
+                  name: firewallrule
+                spec:
+                  src: ovn-network
+                  src_dip: "160.52.40.3"
+                  src_port: "80"
+                  proto: tcp
+                  target: REJECT
+        '404':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: firewall rule not found for the given name
+        '500':
+          description: Internal error
+          content: {}
+    delete:
+      tags:
+        - Firewall Rule Registration
+      summary: Delete firewall rule by name
+      description: |
+        Delete `Firewall Rule` by name
+      operationId: deleteFirewallRuleByName
+      responses: # list of responses
+        '200':
+          description: Success
+          content:
+            application/json:
+              example:
+                message: Object deleted successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                message: Error deleting object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: Object not found
+        '500':
+          description: Internal error
+          content: {}
+          
+   ############################ MWAN3 ############################################################
+   
+  /api/v1/mwan3/policies:
+    post:
+      tags:
+        - MWAN3 Policy Registration
+      summary: mwan3 policy registration
+      description: Add a new `MWAN3 Policy`
+      operationId: addMWAN3Policy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MWAN3Policy'
+            example:
+              metadata:
+                name: mwan3policy
+              spec:
+                members:
+                  - metric: 2
+                    network: ovn-network
+                    weight: 2
+                  - metric: 2
+                    network: pnetwork
+                    weight: 2
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MWAN3Policy'
+              example:
+                metadata:
+                  name: mwan3policy
+                spec:
+                  members:
+                    - metric: 2
+                      network: ovn-network
+                      weight: 2
+                    - metric: 2
+                      network: pnetwork
+                      weight: 2
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                message: Error creating object
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              example:
+                message: Content-Type not supported!
+        '409':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: Object already exists
+        '500':
+          description: Internal error
+          content: {}
+    get:
+      tags:
+        - MWAN3 Policy Registration
+      summary: Get all mwan3 policies
+      description: Return all `MWAN3 Policies`
+      operationId: getMWAN3Policies
+      responses: # list of responses
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MWAN3PolicyArray'
+              example:
+              - metadata:
+                  name: mwan3policy
+                spec:
+                  members:
+                    - metric: 2
+                      network: ovn-network
+                      weight: 2
+                    - metric: 2
+                      network: pnetwork
+                      weight: 2
+        '404':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: No mwan3 policies found
+        '500':
+          description: Internal error
+          content: {}
+  /api/v1/mwan3/policies/{policy-name}:
+    parameters:
+    - $ref: '#/components/parameters/policy-name'
+    get:
+      tags:
+        - MWAN3 Policy Registration
+      summary: Get mwan3 policy by name
+      description: |
+        Return a `MWAN3 Policy` by name
+      operationId: getMWAN3PolicyByName
+      responses: # list of responses
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MWAN3Policy'
+              example:
+                metadata:
+                  name: mwan3policy
+                spec:
+                  members:
+                    - metric: 2
+                      network: ovn-network
+                      weight: 2
+                    - metric: 2
+                      network: pnetwork
+                      weight: 2
+        '404':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: mwan3 policy not found for the given name
+        '500':
+          description: Internal error
+          content: {}
+    delete:
+      tags:
+        - MWAN3 Policy Registration
+      summary: Delete mwan3 policy by name
+      description: |
+        Delete `MWAN3 Policy` by name
+      operationId: deleteMWAN3PolicyByName
+      responses: # list of responses
+        '200':
+          description: Success
+          content:
+            application/json:
+              example:
+                message: Object deleted successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                message: Error deleting object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: Object not found
+        '500':
+          description: Internal error
+          content: {}
+          
+  /api/v1/mwan3/rules:
+    post:
+      tags:
+        - MWAN3 Rule Registration
+      summary: mwan3 rule registration
+      description: Add a new `MWAN3 Rule`
+      operationId: addMWAN3Rule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MWAN3Rule'
+            example:
+              metadata:
+                name: mwan3rule
+              spec:
+                policy: mwan3policy
+                proto: tcp
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MWAN3Rule'
+              example:
+                metadata:
+                  name: mwan3rule
+                spec:
+                  policy: mwan3policy
+                  proto: tcp
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                message: Error creating object
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              example:
+                message: Content-Type not supported!
+        '409':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: Object already exists
+        '500':
+          description: Internal error
+          content: {}
+    get:
+      tags:
+        - MWAN3 Rule Registration
+      summary: Get all mwan3 rules
+      description: Return all `MWAN3 Rules`
+      operationId: getMWAN3Rules
+      responses: # list of responses
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MWAN3RuleArray'
+              example:
+              - metadata:
+                  name: mwan3rule
+                spec:
+                  policy: mwan3policy
+                  proto: tcp
+        '404':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: No mwan3 rules found
+        '500':
+          description: Internal error
+          content: {}
+  /api/v1/mwan3/rules/{rule-name}:
+    parameters:
+    - $ref: '#/components/parameters/rule-name'
+    get:
+      tags:
+        - MWAN3 Rule Registration
+      summary: Get mwan3 rule by name
+      description: |
+        Return a `MWAN3 Rule` by name
+      operationId: getMWAN3RuleByName
+      responses: # list of responses
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MWAN3Rule'
+              example:
+                metadata:
+                  name: mwan3rule
+                spec:
+                  policy: mwan3policy
+                  proto: tcp
+        '404':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: mwan3 rule not found for the given name
+        '500':
+          description: Internal error
+          content: {}
+    delete:
+      tags:
+        - MWAN3 Rule Registration
+      summary: Delete mwan3 rule by name
+      description: |
+        Delete `MWAN3 Rule` by name
+      operationId: deleteMWAN3RuleByName
+      responses: # list of responses
+        '200':
+          description: Success
+          content:
+            application/json:
+              example:
+                message: Object deleted successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                message: Error deleting object
+        '404':
+          description: Not found
+          content:
+            application/json:
+              example:
+                message: Object not found
+        '500':
+          description: Internal error
+          content: {}
+    
+   ############################ Common endpoints #################################################
+  /api/v1/version:
+    get:
+      tags:
+        - Common endpoints
+      summary: Get version
+      description: Get current enabler `version`
+      operationId: getVersion
+      responses: # list of responses
+            '200':
+              description: Success
+              content:
+                application/json:
+                  schema:
+                      $ref: '#/components/schemas/Version'
+                  example:
+                    enabler: "wan-acceleration"
+                    version: "1.0.0"
+            '500':
+              description: Internal error
+              content: {}
+              
+  /api/v1/health:
+    get:
+      tags:
+        - Common endpoints
+      summary: Get health status
+      description: Returns enabler's health status
+      operationId: getHealth
+      responses: # list of responses
+            '200':
+              description: Success
+              content:
+                application/json:
+                  schema:
+                      $ref: '#/components/schemas/Health'
+                  example:
+                    status: healthy
+            '500':
+              description: Internal error
+              content: {}
+            '503':
+              description: Service unavailable
+              content:
+                application/json:
+                  schema:
+                      $ref: '#/components/schemas/Health'
+                  example:
+                    status: unhealthy
+                    
+  /api/v1/api-export:
+    get:
+      tags:
+        - Common endpoints
+      summary: Get OpenAPI documentation
+      description: Returns enabler's OpenAPI documentation
+      operationId: getOpenAPI
+      responses: # list of responses
+            '200':
+              description: Success
+              content:
+                application/json:
+                  example:
+                    openapi: 3.0.2
+                    info:
+                      version: '2.0.0'
+                      title: WAN Acceleration OpenAPI
+                      license:
+                        name: Apache 2.0
+                        url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+                    ...: ...
+            '500':
+              description: Internal error
+              content: {}
+    
+######################### SCHEMAS ####################################################
+# An object to hold reusable parts that can be used across the definition
+components:
+  schemas:
+    Metadata:
+      type: object
+      properties:
+        name:
+          description: Name of the resource
+          type: string
+          maxLength: 128
+      required:
+        - name
+    FirewallZoneSpec:
+      type: object
+      properties:
+        network:
+          description: List of interfaces attached to this zone
+          type: array
+          items:
+            type: string
+            maxLength: 128
+        masq:
+          description: Specifies whether outgoing zone traffic should be masqueraded. "0" or "1"
+          type: boolean
+        masq_src:
+          description: Limit masquerading to the given source subnets.
+          type: string
+          maxLength: 128
+        masq_dest:
+          description: Limit masquerading to the given destination subnets
+          type: string
+          maxLength: 128
+        masq_allow_invalid:
+          description: whether add DROP INVALID rules 
+          type: boolean
+        mtu_fix:
+          description: Enable MSS clamping for outgoing zone traffic 
+          type: boolean
+        input:
+          description: Default policy (ACCEPT, REJECT, DROP) for incoming zone traffic. 
+          type: string
+          maxLength: 128
+        output:
+          description: Default policy (ACCEPT, REJECT, DROP) for output zone traffic. 
+          type: string
+          maxLength: 128
+        forward:
+          description: Default policy (ACCEPT, REJECT, DROP) for forwarded zone traffic. 
+          type: string
+          maxLength: 128
+        family:
+          description: The protocol family (ipv4, ipv6 or any) these iptables rules are for. 
+          type: string
+          maxLength: 128
+        subnet:
+          description: List of IP subnets attached to this zone 
+          type: string
+          maxLength: 128
+        extra_src:   
+          description: Extra arguments passed directly to iptables for source classification rules. 
+          type: string
+          maxLength: 128
+        extra_dest:
+          description: Extra arguments passed directly to iptables for destination classification rules. 
+          type: string
+          maxLength: 128
+      required:
+        - network
+    FirewallZone:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        spec:
+          $ref: '#/components/schemas/FirewallZoneSpec'
+      required:
+        - metadata
+        - spec
+    FirewallZoneArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/FirewallZone'
+    FirewallSNATSpec:
+      type: object
+      properties:
+        dest:
+          description: Specifies the traffic destination zone. Must refer to one of the defined zone names. 
+          type: string
+          maxLength: 128
+        dest_ip:
+          description: For DNAT, redirect matches incoming traffic to the specified internal host. For SNAT, it matches traffic directed at the given address.  
+          type: string
+          maxLength: 128
+        dest_port:  
+          description: For DNAT, redirect matched incoming traffic to the given port on the internal host. For SNAT, match traffic directed at the given ports.
+          type: string
+          maxLength: 128
+        family:
+          description: Protocol family (ipv4, ipv6 or any) to generate iptables rules for 
+          type: string
+          maxLength: 128
+        mark:
+          description: match traffic against the given firewall mark 
+          type: string
+          maxLength: 128
+        proto:
+          description: Match incoming traffic using the given protocol. Can be one of tcp, udp, tcpudp, udplite, icmp, esp, ah, sctp, or all 
+          type: string
+          maxLength: 128
+        src:
+          description: (Required for DNAT) traffic source zone
+          type: string
+          maxLength: 128
+        src_dip:
+          description: (Required for SNAT) For DNAT, match incoming traffic directed at the given destination ip address. For SNAT rewrite the source address to the given address.
+          type: string
+          maxLength: 128
+        src_dport:
+          description: For DNAT, match incoming traffic directed at the given destination port or port range on this host. For SNAT rewrite the source ports to the given value. 
+          type: string
+          maxLength: 128
+        src_ip:
+          description: 	Match incoming traffic from the specified source ip address.
+          type: string
+          maxLength: 128
+        src_mac:
+          description: Match incoming traffic from the specified mac address. 
+          type: string
+          maxLength: 128
+        src_port:
+          description: 	Match incoming traffic originating from the given source port or port range on the client host.
+          type: string
+          maxLength: 128
+      required:
+        - src_dip
+    FirewallSNAT:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        spec:
+          $ref: '#/components/schemas/FirewallSNATSpec'
+      required:
+        - metadata
+        - spec
+    FirewallSNATArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/FirewallSNAT'
+    FirewallDNATSpec:
+      type: object
+      properties:
+        dest:
+          description: Specifies the traffic destination zone. Must refer to one of the defined zone names. 
+          type: string
+          maxLength: 128
+        dest_ip:
+          description: For DNAT, redirect matches incoming traffic to the specified internal host. For SNAT, it matches traffic directed at the given address.  
+          type: string
+          maxLength: 128
+        dest_port: 
+          description: For DNAT, redirect matched incoming traffic to the given port on the internal host. For SNAT, match traffic directed at the given ports. 
+          type: string
+          maxLength: 128
+        family:
+          description: Protocol family (ipv4, ipv6 or any) to generate iptables rules for 
+          type: string
+          maxLength: 128
+        mark:
+          description: match traffic against the given firewall mark 
+          type: string
+          maxLength: 128
+        proto:
+          description: Match incoming traffic using the given protocol. Can be one of tcp, udp, tcpudp, udplite, icmp, esp, ah, sctp, or all 
+          type: string
+          maxLength: 128
+        src:
+          description: (Required for DNAT) traffic source zone
+          type: string
+          maxLength: 128
+        src_dip:
+          description: (Required for SNAT) For DNAT, match incoming traffic directed at the given destination ip address. For SNAT rewrite the source address to the given address.
+          type: string
+          maxLength: 128
+        src_dport:
+          description: For DNAT, match incoming traffic directed at the given destination port or port range on this host. For SNAT rewrite the source ports to the given value. 
+          type: string
+          maxLength: 128
+        src_ip:
+          description: 	Match incoming traffic from the specified source ip address.
+          type: string
+          maxLength: 128
+        src_mac:
+          description: Match incoming traffic from the specified mac address. 
+          type: string
+          maxLength: 128
+        src_port:
+          description: 	Match incoming traffic originating from the given source port or port range on the client host.
+          type: string
+          maxLength: 128
+      required:
+        - src
+    FirewallDNAT:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        spec:
+          $ref: '#/components/schemas/FirewallDNATSpec'
+      required:
+        - metadata
+        - spec
+    FirewallDNATArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/FirewallDNAT'
+    FirewallForwardingSpec:
+      type: object
+      properties:
+        src:
+          description: Traffic source zone
+          type: string
+          maxLength: 128
+        dest:
+          description: Specifies the traffic destination zone. Must refer to one of the defined zone names. 
+          type: string
+          maxLength: 128
+        family:
+          description: Protocol family (ipv4, ipv6 or any) to generate iptables rules for 
+          type: string
+          maxLength: 128
+      required:
+        - src
+        - dest
+    FirewallForwarding:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        spec:
+          $ref: '#/components/schemas/FirewallForwardingSpec'
+      required:
+        - metadata
+        - spec
+    FirewallForwardingArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/FirewallForwarding'
+    FirewallRuleSpec:
+      type: object
+      properties:
+        dest:
+          description: traffic destination zone. Must refer to one of the defined zone names, or * for any zone
+          type: string
+          maxLength: 128
+        dest_ip:
+          description: Match incoming traffic directed to the specified destination ip address 
+          type: string
+          maxLength: 128
+        dest_port:
+          description: Match incoming traffic directed at the given destination port or port range 
+          type: string
+          maxLength: 128
+        extra:
+          description: Extra arguments to pass to iptables. Useful mainly to specify additional match options, such as -m policy --dir in for IPsec. 
+          type: string
+          maxLength: 128
+        family:
+          description: Protocol family (ipv4, ipv6 or any) to generate iptables rules for 
+          type: string
+          maxLength: 128
+        icmp_type:
+          description: For protocol icmp select specific icmp types to match. 
+          type: array
+          items:
+            type: string
+            maxLength: 128
+        mark:
+          description: 	If specified, match traffic against the given firewall mark 
+          type: string
+          maxLength: 128
+        proto:
+          description: Match incoming traffic using the given protocol. Can be one of tcp, udp, tcpudp, udplite, icmp, esp, ah, sctp, or all  
+          type: string
+          maxLength: 128
+        set_mark:
+          description: Zeroes out the bits given by mask and ORs value into the packet mark. 
+          type: string
+          maxLength: 128
+        set_xmark:
+          description: Zeroes out the bits given by mask and XORs value into the packet mark 
+          type: string
+          maxLength: 128
+        src:
+          description: (Required) traffic source zone
+          type: string
+          maxLength: 128
+        src_ip:
+          description: 	Match incoming traffic from the specified source ip address
+          type: string
+          maxLength: 128
+        src_mac:
+          description: 	Match incoming traffic from the specified mac address
+          type: string
+          maxLength: 128
+        src_port:
+          description: Match incoming traffic from the specified source port or port range
+          type: string
+          maxLength: 128
+        target:
+          description: (Required) Firewall action (ACCEPT, REJECT, DROP, MARK, NOTRACK) for matched traffic
+          type: string
+          maxLength: 128
+      required:
+        - src
+        - target
+    FirewallRule:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        spec:
+          $ref: '#/components/schemas/FirewallRuleSpec'
+      required:
+        - metadata
+        - spec
+    FirewallRuleArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/FirewallRule'
+    MWAN3PolicySpec:
+      type: object
+      properties:
+        dest_ip:
+          description: Destination ip address
+          type: string
+          maxLength: 128
+        dest_port:
+          description: Destination port or port range
+          type: string
+          maxLength: 128
+        family:
+          description: Address family. Valid values, "ipv4", "ipv6", "all" 
+          type: string
+          maxLength: 128
+        policy:
+          description: Policy used for the rule
+          type: string
+          maxLength: 128
+        proto:
+          description: Protocol for the rule. Valid values, "tcp", "udp", "icmp", "all"
+          type: string
+          maxLength: 128
+        src_ip:
+          description: Source ip address
+          type: string
+          maxLength: 128
+        src_port:
+          description: Source port or port range
+          type: string
+          maxLength: 128
+        sticky:
+          description: Default, 0, allow traffic from the same source ip address within the timeout limit to use same wan interface as prior session 
+          type: string
+          maxLength: 128
+        timeout:
+          description: Default, 600,  Stickiness timeout value in seconds
+          type: string
+          maxLength: 128
+      required:
+        - policy
+    MWAN3Policy:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        spec:
+          $ref: '#/components/schemas/MWAN3PolicySpec'
+      required:
+        - metadata
+        - spec
+    MWAN3PolicyArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/MWAN3Policy'
+    MWAN3RuleSpec:
+      type: object
+      properties:
+        members:
+          description: policy members
+          type: array
+          items:
+            type: object
+            description: Mwan3PolicySpec defines the desired state of Mwan3Policy
+            properties:
+              metric:
+                description: (optional) default 1, members within one policy with a lower metric have precedence over higher metric members
+                type: integer
+              network:
+                description: member interface name
+                type: string
+              weight:
+                description: (optional) default, 1, members with same metric will distribute load based on this weight value
+                type: integer
+            required:
+              - network
+      required:
+        - members
+    MWAN3Rule:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        spec:
+          $ref: '#/components/schemas/MWAN3RuleSpec'
+      required:
+        - metadata
+        - spec
+    MWAN3RuleArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/MWAN3Rule'
+    Version:
+      type: object
+      properties:
+        enabler:
+          description: Enabler's name
+          type: string
+          maxLength: 128
+        version:
+          description: Current enabler's version
+          type: string
+          maxLength: 128
+    Health:
+      type: object
+      properties:
+        status:
+          description: Returns health status of enabler
+          type: string
+          maxLength: 128
+          
+######################### PARAMETERS #################################################
+  parameters:
+    zone-name:
+      name: zone-name
+      in: path
+      description: Name of the Zone
+      required: true
+      schema:
+        type: string
+        maxLength: 128
+    snat-name:
+      name: snat-name
+      in: path
+      description: Name of the SNAT
+      required: true
+      schema:
+        type: string
+        maxLength: 128
+    dnat-name:
+      name: dnat-name
+      in: path
+      description: Name of the DNAT
+      required: true
+      schema:
+        type: string
+        maxLength: 128
+    forwarding-name:
+      name: forwarding-name
+      in: path
+      description: Name of the Forwarding
+      required: true
+      schema:
+        type: string
+        maxLength: 128
+    rule-name:
+      name: rule-name
+      in: path
+      description: Name of the Rule
+      required: true
+      schema:
+        type: string
+        maxLength: 128
+    policy-name:
+      name: policy-name
+      in: path
+      description: Name of the Policy
+      required: true
+      schema:
+        type: string
+        maxLength: 128

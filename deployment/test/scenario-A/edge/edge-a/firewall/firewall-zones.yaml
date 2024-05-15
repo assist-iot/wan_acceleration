@@ -1,0 +1,33 @@
+apiVersion: batch.sdewan.akraino.org/v1alpha1
+kind: FirewallZone
+metadata:
+  name: ovn-network
+  namespace: default
+  labels:
+    sdewanPurpose: base
+    targetCluster: Device.device1
+spec:
+  network:
+    - ovn-network
+  input: ACCEPT
+  output: ACCEPT
+  forward: ACCEPT
+  masq: "0"
+  mtu_fix: "1"
+---
+apiVersion: batch.sdewan.akraino.org/v1alpha1
+kind: FirewallZone
+metadata:
+  name: pnetwork
+  namespace: default
+  labels:
+    sdewanPurpose: base
+    targetCluster: Device.device1
+spec:
+  network:
+    - pnetwork
+  input: ACCEPT
+  output: ACCEPT
+  forward: ACCEPT
+  masq: "0"
+  mtu_fix: "1"
